@@ -37,16 +37,16 @@ func GetProvider(resourceMap map[string]*schema.Resource) *tjconfig.Provider {
 		return r
 	}
 
-        // https://github.com/linode/terraform-provider-linode/tree/main/linode
+	// https://github.com/linode/terraform-provider-linode/tree/main/linode
 	pc := tjconfig.NewProvider(resourceMap, resourcePrefix, modulePath,
 		tjconfig.WithDefaultResourceFn(defaultResourceFn),
-                tjconfig.WithIncludeList([]string{
-                  "linode_lke_cluster$",
-                }))
+		tjconfig.WithIncludeList([]string{
+			"linode_lke_cluster$",
+		}))
 
 	for _, configure := range []func(provider *tjconfig.Provider){
 		// add custom config functions
-                lke.Customize,
+		lke.Customize,
 	} {
 		configure(pc)
 	}

@@ -19,11 +19,13 @@ package config
 import (
 	tjconfig "github.com/crossplane-contrib/terrajet/pkg/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/crossplane-contrib/provider-jet-linode/config/lke"
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/crossplane-contrib/provider-jet-template"
+	resourcePrefix = "linode"
+	modulePath     = "github.com/crossplane-contrib/provider-jet-linode"
 )
 
 // GetProvider returns provider configuration
@@ -35,11 +37,16 @@ func GetProvider(resourceMap map[string]*schema.Resource) *tjconfig.Provider {
 		return r
 	}
 
+        // https://github.com/linode/terraform-provider-linode/tree/main/linode
 	pc := tjconfig.NewProvider(resourceMap, resourcePrefix, modulePath,
-		tjconfig.WithDefaultResourceFn(defaultResourceFn))
+		tjconfig.WithDefaultResourceFn(defaultResourceFn),
+                tjconfig.WithIncludeList([]string{
+                  "lke$",
+                }))
 
 	for _, configure := range []func(provider *tjconfig.Provider){
 		// add custom config functions
+                lke.Customize,
 	} {
 		configure(pc)
 	}

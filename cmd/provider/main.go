@@ -36,7 +36,7 @@ import (
 
 func main() {
 	var (
-		app              = kingpin.New(filepath.Base(os.Args[0]), "Terraform based Crossplane provider for Template").DefaultEnvars()
+		app              = kingpin.New(filepath.Base(os.Args[0]), "Terraform based Crossplane provider for Linode").DefaultEnvars()
 		debug            = app.Flag("debug", "Run with debug logging.").Short('d').Bool()
 		syncPeriod       = app.Flag("sync", "Controller manager sync period such as 300ms, 1.5h, or 2h45m").Short('s').Default("1h").Duration()
 		leaderElection   = app.Flag("leader-election", "Use leader election for the controller manager.").Short('l').Default("false").OverrideDefaultFromEnvar("LEADER_ELECTION").Bool()
@@ -47,7 +47,7 @@ func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 
 	zl := zap.New(zap.UseDevMode(*debug))
-	log := logging.NewLogrLogger(zl.WithName("provider-jet-template"))
+	log := logging.NewLogrLogger(zl.WithName("provider-jet-linode"))
 	if *debug {
 		// The controller-runtime runs with a no-op logger by default. It is
 		// *very* verbose even at info level, so we only provide it a real
@@ -62,7 +62,7 @@ func main() {
 
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		LeaderElection:   *leaderElection,
-		LeaderElectionID: "crossplane-leader-election-provider-jet-template",
+		LeaderElectionID: "crossplane-leader-election-provider-jet-linode",
 		SyncPeriod:       syncPeriod,
 	})
 	kingpin.FatalIfError(err, "Cannot create controller manager")
@@ -70,7 +70,7 @@ func main() {
 	setup := clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion)
 
 	rl := ratelimiter.NewGlobal(ratelimiter.DefaultGlobalRPS)
-	kingpin.FatalIfError(apis.AddToScheme(mgr.GetScheme()), "Cannot add Template APIs to scheme")
-	kingpin.FatalIfError(controller.Setup(mgr, log, rl, setup, ws, pconfig.GetProvider(tf.Provider()), 1), "Cannot setup Template controllers")
+	kingpin.FatalIfError(apis.AddToScheme(mgr.GetScheme()), "Cannot add Linode APIs to scheme")
+	kingpin.FatalIfError(controller.Setup(mgr, log, rl, setup, ws, pconfig.GetProvider(tf.Provider()), 1), "Cannot setup Linode controllers")
 	kingpin.FatalIfError(mgr.Start(ctrl.SetupSignalHandler()), "Cannot start controller manager")
 }

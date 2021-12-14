@@ -31,13 +31,7 @@ import (
 )
 
 const (
-	keyUsername = "username"
-	keyPassword = "password"
-	keyHost     = "host"
-
-	// Template credentials environment variable names
-	envUsername = "HASHICUPS_USERNAME"
-	envPassword = "HASHICUPS_PASSWORD"
+	envToken = "LINODE_TOKEN"
 )
 
 const (
@@ -48,7 +42,7 @@ const (
 	errGetProviderConfig    = "cannot get referenced ProviderConfig"
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal template credentials as JSON"
+	errUnmarshalCredentials = "cannot unmarshal linode credentials as JSON"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -81,19 +75,14 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if err != nil {
 			return ps, errors.Wrap(err, errExtractCredentials)
 		}
-		templateCreds := map[string]string{}
-		if err := json.Unmarshal(data, &templateCreds); err != nil {
+		linodeCreds := map[string]string{}
+		if err := json.Unmarshal(data, &linodeCreds); err != nil {
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
 
-		// set provider configuration
-		ps.Configuration = map[string]interface{}{
-			"host": templateCreds[keyHost],
-		}
 		// set environment variables for sensitive provider configuration
 		ps.Env = []string{
-			fmt.Sprintf(fmtEnvVar, envUsername, templateCreds[keyUsername]),
-			fmt.Sprintf(fmtEnvVar, envPassword, templateCreds[keyPassword]),
+			fmt.Sprintf(fmtEnvVar, envToken, linodeCreds["token"]),
 		}
 		return ps, nil
 	}

@@ -1,14 +1,14 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME := provider-jet-template
+PROJECT_NAME := provider-jet-linode
 PROJECT_REPO := github.com/crossplane-contrib/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION := 1.0.11
-export TERRAFORM_PROVIDER_SOURCE :=
-export TERRAFORM_PROVIDER_VERSION :=
-export TERRAFORM_PROVIDER_DOWNLOAD_NAME :=
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX :=
+export TERRAFORM_PROVIDER_SOURCE := linode/linode
+export TERRAFORM_PROVIDER_VERSION := 1.25.0
+export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-linode
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
@@ -50,7 +50,7 @@ GO111MODULE = on
 # Setup Images
 
 DOCKER_REGISTRY := crossplane
-IMAGES = provider-jet-template provider-jet-template-controller
+IMAGES = provider-jet-linode provider-jet-linode-controller
 -include build/makelib/image.mk
 
 # ====================================================================================

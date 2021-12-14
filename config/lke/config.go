@@ -8,6 +8,6 @@ func Customize(p *config.Provider) {
 
         // we need to override the default group that terrajet generated for
         // this resource, which would be "github"  
-        r.ShortGroup = "lke"
+        r.ShortGroup = ""
     })
 }

@@ -41,7 +41,7 @@ func GetProvider(resourceMap map[string]*schema.Resource) *tjconfig.Provider {
 	pc := tjconfig.NewProvider(resourceMap, resourcePrefix, modulePath,
 		tjconfig.WithDefaultResourceFn(defaultResourceFn),
                 tjconfig.WithIncludeList([]string{
-                  "lke$",
+                  "linode_lke_cluster$",
                 }))
 
 	for _, configure := range []func(provider *tjconfig.Provider){

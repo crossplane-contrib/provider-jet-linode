@@ -25,18 +25,18 @@ import (
 	"github.com/crossplane-contrib/terrajet/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this Order
-func (mg *Order) GetTerraformResourceType() string {
-	return "hashicups_order"
+// GetTerraformResourceType returns Terraform resource type for this Cluster
+func (mg *Cluster) GetTerraformResourceType() string {
+	return "linode_lke_cluster"
 }
 
-// GetConnectionDetailsMapping for this Order
-func (tr *Order) GetConnectionDetailsMapping() map[string]string {
-	return nil
+// GetConnectionDetailsMapping for this Cluster
+func (tr *Cluster) GetConnectionDetailsMapping() map[string]string {
+	return map[string]string{"kubeconfig": "status.atProvider.kubeconfig"}
 }
 
-// GetObservation of this Order
-func (tr *Order) GetObservation() (map[string]interface{}, error) {
+// GetObservation of this Cluster
+func (tr *Cluster) GetObservation() (map[string]interface{}, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,8 @@ func (tr *Order) GetObservation() (map[string]interface{}, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this Order
-func (tr *Order) SetObservation(obs map[string]interface{}) error {
+// SetObservation for this Cluster
+func (tr *Cluster) SetObservation(obs map[string]interface{}) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -54,8 +54,8 @@ func (tr *Order) SetObservation(obs map[string]interface{}) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetParameters of this Order
-func (tr *Order) GetParameters() (map[string]interface{}, error) {
+// GetParameters of this Cluster
+func (tr *Cluster) GetParameters() (map[string]interface{}, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -64,8 +64,8 @@ func (tr *Order) GetParameters() (map[string]interface{}, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this Order
-func (tr *Order) SetParameters(params map[string]interface{}) error {
+// SetParameters for this Cluster
+func (tr *Cluster) SetParameters(params map[string]interface{}) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -73,10 +73,10 @@ func (tr *Order) SetParameters(params map[string]interface{}) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// LateInitialize this Order using its observed tfState.
+// LateInitialize this Cluster using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *Order) LateInitialize(attrs []byte) (bool, error) {
-	params := &OrderParameters{}
+func (tr *Cluster) LateInitialize(attrs []byte) (bool, error) {
+	params := &ClusterParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -87,6 +87,6 @@ func (tr *Order) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *Order) GetTerraformSchemaVersion() int {
+func (tr *Cluster) GetTerraformSchemaVersion() int {
 	return 0
 }

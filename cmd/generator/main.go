@@ -1,5 +1,3 @@
-// +build generate
-
 /*
 Copyright 2021 The Crossplane Authors.
 
@@ -23,14 +21,14 @@ import (
 	"os"
 	"path/filepath"
 
-	tf "github.com/hashicorp/terraform-provider-hashicups/hashicups"
+	tf "github.com/linode/terraform-provider-linode/linode"
 
 	"github.com/crossplane-contrib/terrajet/pkg/pipeline"
 	// Comment out the line below instead of the above, if your Terraform
 	// provider uses an old version (<v2) of github.com/hashicorp/terraform-plugin-sdk.
 	// "github.com/crossplane-contrib/terrajet/pkg/types/conversion"
 
-	"github.com/crossplane-contrib/provider-jet-template/config"
+	"github.com/crossplane-contrib/provider-jet-linode/config"
 )
 
 func main() {

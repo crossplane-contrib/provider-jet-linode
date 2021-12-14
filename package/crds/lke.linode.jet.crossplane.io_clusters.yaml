@@ -4,18 +4,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
   creationTimestamp: null
-  name: orders.hashicups.template.jet.crossplane.io
+  name: clusters.lke.linode.jet.crossplane.io
 spec:
-  group: hashicups.template.jet.crossplane.io
+  group: lke.linode.jet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
-    - templatejet
-    kind: Order
-    listKind: OrderList
-    plural: orders
-    singular: order
+    - linodejet
+    kind: Cluster
+    listKind: ClusterList
+    plural: clusters
+    singular: cluster
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Order is the Schema for the Orders API
+        description: Cluster is the Schema for the Clusters API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: OrderSpec defines the desired state of Order
+            description: ClusterSpec defines the desired state of Cluster
             properties:
               deletionPolicy:
                 default: Delete
@@ -62,31 +62,75 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  items:
+                  controlPlane:
+                    description: Defines settings for the Kubernetes Control Plane.
                     items:
                       properties:
-                        coffee:
+                        highAvailability:
+                          description: Defines whether High Availability is enabled
+                            for the Control Plane Components of the cluster.
+                          type: boolean
+                      type: object
+                    type: array
+                  k8sVersion:
+                    description: The desired Kubernetes version for this Kubernetes
+                      cluster in the format of <major>.<minor>. The latest supported
+                      patch version will be deployed.
+                    type: string
+                  label:
+                    description: The unique label for the cluster.
+                    type: string
+                  pool:
+                    description: A node pool in the cluster.
+                    items:
+                      properties:
+                        autoscaler:
+                          description: When specified, the number of nodes autoscales
+                            within the defined minimum and maximum values.
                           items:
                             properties:
-                              id:
+                              max:
+                                description: The maximum number of nodes to autoscale
+                                  to.
+                                format: int64
+                                type: integer
+                              min:
+                                description: The minimum number of nodes to autoscale
+                                  to.
                                 format: int64
                                 type: integer
                             required:
-                            - id
+                            - max
+                            - min
                             type: object
                           type: array
-                        quantity:
+                        count:
+                          description: The number of nodes in the Node Pool.
                           format: int64
                           type: integer
+                        type:
+                          description: A Linode Type for all of the nodes in the Node
+                            Pool.
+                          type: string
                       required:
-                      - coffee
-                      - quantity
+                      - count
+                      - type
                       type: object
                     type: array
-                  lastUpdated:
+                  region:
+                    description: This cluster's location.
                     type: string
+                  tags:
+                    description: An array of tags applied to this object. Tags are
+                      for organizational purposes only.
+                    items:
+                      type: string
+                    type: array
                 required:
-                - items
+                - k8sVersion
+                - label
+                - pool
+                - region
                 type: object
               providerConfigRef:
                 default:
@@ -133,9 +177,16 @@ spec:
             - forProvider
             type: object
           status:
-            description: OrderStatus defines the observed state of Order.
+            description: ClusterStatus defines the observed state of Cluster.
             properties:
               atProvider:
+                properties:
+                  apiEndpoints:
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

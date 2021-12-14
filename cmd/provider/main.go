@@ -23,15 +23,15 @@ import (
 	"github.com/crossplane-contrib/terrajet/pkg/terraform"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
 	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
-	tf "github.com/hashicorp/terraform-provider-hashicups/hashicups"
+	tf "github.com/linode/terraform-provider-linode/linode"
 	"gopkg.in/alecthomas/kingpin.v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/crossplane-contrib/provider-jet-template/apis"
-	pconfig "github.com/crossplane-contrib/provider-jet-template/config"
-	"github.com/crossplane-contrib/provider-jet-template/internal/clients"
-	"github.com/crossplane-contrib/provider-jet-template/internal/controller"
+	"github.com/crossplane-contrib/provider-jet-linode/apis"
+	pconfig "github.com/crossplane-contrib/provider-jet-linode/config"
+	"github.com/crossplane-contrib/provider-jet-linode/internal/clients"
+	"github.com/crossplane-contrib/provider-jet-linode/internal/controller"
 )
 
 func main() {

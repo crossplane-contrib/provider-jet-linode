@@ -18,7 +18,6 @@ package clients
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/crossplane-contrib/terrajet/pkg/terraform"
@@ -31,18 +30,17 @@ import (
 )
 
 const (
-	envToken = "LINODE_TOKEN"
+	envLinodeToken = "LINODE_TOKEN"
 )
 
 const (
 	fmtEnvVar = "%s=%s"
 
 	// error messages
-	errNoProviderConfig     = "no providerConfigRef provided"
-	errGetProviderConfig    = "cannot get referenced ProviderConfig"
-	errTrackUsage           = "cannot track ProviderConfig usage"
-	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal linode credentials as JSON"
+	errNoProviderConfig   = "no providerConfigRef provided"
+	errGetProviderConfig  = "cannot get referenced ProviderConfig"
+	errTrackUsage         = "cannot track ProviderConfig usage"
+	errExtractCredentials = "cannot extract credentials"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -71,18 +69,14 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 			return ps, errors.Wrap(err, errTrackUsage)
 		}
 
-		data, err := resource.CommonCredentialExtractor(ctx, pc.Spec.Credentials.Source, client, pc.Spec.Credentials.CommonCredentialSelectors)
+		linodeToken, err := resource.CommonCredentialExtractor(ctx, pc.Spec.Credentials.Source, client, pc.Spec.Credentials.CommonCredentialSelectors)
 		if err != nil {
 			return ps, errors.Wrap(err, errExtractCredentials)
-		}
-		linodeCreds := map[string]string{}
-		if err := json.Unmarshal(data, &linodeCreds); err != nil {
-			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
 
 		// set environment variables for sensitive provider configuration
 		ps.Env = []string{
-			fmt.Sprintf(fmtEnvVar, envToken, linodeCreds["token"]),
+			fmt.Sprintf(fmtEnvVar, envLinodeToken, linodeToken),
 		}
 		return ps, nil
 	}

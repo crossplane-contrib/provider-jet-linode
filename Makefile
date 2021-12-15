@@ -8,7 +8,7 @@ export TERRAFORM_VERSION := 1.0.11
 export TERRAFORM_PROVIDER_SOURCE := linode/linode
 export TERRAFORM_PROVIDER_VERSION := 1.25.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-linode
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/$(TERRAFORM_PROVIDER_VERSION)
 
 PLATFORMS ?= linux_amd64 linux_arm64
 

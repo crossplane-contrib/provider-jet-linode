@@ -25,7 +25,7 @@ import (
 	tjconfig "github.com/crossplane-contrib/terrajet/pkg/config"
 	"github.com/crossplane-contrib/terrajet/pkg/terraform"
 
-	cluster "github.com/crossplane-contrib/provider-jet-linode/internal/controller/lke/cluster"
+	cluster "github.com/crossplane-contrib/provider-jet-linode/internal/controller/linode/cluster"
 	providerconfig "github.com/crossplane-contrib/provider-jet-linode/internal/controller/providerconfig"
 )
 

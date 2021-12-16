@@ -4,9 +4,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
   creationTimestamp: null
-  name: clusters.lke.linode.jet.crossplane.io
+  name: clusters.linode.jet.crossplane.io
 spec:
-  group: lke.linode.jet.crossplane.io
+  group: linode.jet.crossplane.io
   names:
     categories:
     - crossplane

@@ -23,10 +23,12 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
 
 	tjconfig "github.com/crossplane-contrib/terrajet/pkg/config"
+	tjcontroller "github.com/crossplane-contrib/terrajet/pkg/controller"
 	"github.com/crossplane-contrib/terrajet/pkg/terraform"
 
 	cluster "github.com/crossplane-contrib/provider-jet-linode/internal/controller/linode/cluster"
-	providerconfig "github.com/crossplane-contrib/provider-jet-linode/internal/controller/providerconfig"
+providerconfig "github.com/crossplane-contrib/provider-jet-linode/internal/controller/providerconfig"
+
 )
 
 // Setup creates all controllers with the supplied logger and adds them to

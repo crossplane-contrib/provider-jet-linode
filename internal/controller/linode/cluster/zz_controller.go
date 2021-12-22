@@ -30,11 +30,12 @@ import (
 	xpresource "github.com/crossplane/crossplane-runtime/pkg/resource"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 
+	"github.com/crossplane-contrib/terrajet/pkg/terraform"
 	tjconfig "github.com/crossplane-contrib/terrajet/pkg/config"
 	tjcontroller "github.com/crossplane-contrib/terrajet/pkg/controller"
-	"github.com/crossplane-contrib/terrajet/pkg/terraform"
 
 	v1alpha1 "github.com/crossplane-contrib/provider-jet-linode/apis/linode/v1alpha1"
+
 )
 
 // Setup adds a controller that reconciles Cluster managed resources.
@@ -50,7 +51,7 @@ func Setup(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimiter, s terra
 		managed.WithFinalizer(terraform.NewWorkspaceFinalizer(ws, xpresource.NewAPIFinalizer(mgr.GetClient(), managed.FinalizerName))),
 		managed.WithTimeout(3*time.Minute),
 		managed.WithInitializers(),
-	)
+		)
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).

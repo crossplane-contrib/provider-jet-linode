@@ -23,133 +23,107 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
-
 )
 
-
-
-
 type AutoscalerObservation struct {
-
 }
-
 
 type AutoscalerParameters struct {
 
+	// The maximum number of nodes to autoscale to.
+	// +kubebuilder:validation:Required
+	Max *int64 `json:"max" tf:"max,omitempty"`
 
-// The maximum number of nodes to autoscale to.
-// +kubebuilder:validation:Required
-Max *int64 `json:"max" tf:"max,omitempty"`
-
-// The minimum number of nodes to autoscale to.
-// +kubebuilder:validation:Required
-Min *int64 `json:"min" tf:"min,omitempty"`
+	// The minimum number of nodes to autoscale to.
+	// +kubebuilder:validation:Required
+	Min *int64 `json:"min" tf:"min,omitempty"`
 }
-
 
 type ClusterObservation struct {
+	APIEndpoints []*string `json:"apiEndpoints,omitempty" tf:"api_endpoints,omitempty"`
 
-
-APIEndpoints []*string `json:"apiEndpoints,omitempty" tf:"api_endpoints,omitempty"`
-
-Status *string `json:"status,omitempty" tf:"status,omitempty"`
+	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 }
-
 
 type ClusterParameters struct {
 
+	// Defines settings for the Kubernetes Control Plane.
+	// +kubebuilder:validation:Optional
+	ControlPlane []ControlPlaneParameters `json:"controlPlane,omitempty" tf:"control_plane,omitempty"`
 
-// Defines settings for the Kubernetes Control Plane.
-// +kubebuilder:validation:Optional
-ControlPlane []ControlPlaneParameters `json:"controlPlane,omitempty" tf:"control_plane,omitempty"`
+	// The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>. The latest supported patch version will be deployed.
+	// +kubebuilder:validation:Required
+	K8SVersion *string `json:"k8sVersion" tf:"k8s_version,omitempty"`
 
-// The desired Kubernetes version for this Kubernetes cluster in the format of <major>.<minor>. The latest supported patch version will be deployed.
-// +kubebuilder:validation:Required
-K8SVersion *string `json:"k8sVersion" tf:"k8s_version,omitempty"`
+	// The unique label for the cluster.
+	// +kubebuilder:validation:Required
+	Label *string `json:"label" tf:"label,omitempty"`
 
-// The unique label for the cluster.
-// +kubebuilder:validation:Required
-Label *string `json:"label" tf:"label,omitempty"`
+	// A node pool in the cluster.
+	// +kubebuilder:validation:Required
+	Pool []PoolParameters `json:"pool" tf:"pool,omitempty"`
 
-// A node pool in the cluster.
-// +kubebuilder:validation:Required
-Pool []PoolParameters `json:"pool" tf:"pool,omitempty"`
+	// This cluster's location.
+	// +kubebuilder:validation:Required
+	Region *string `json:"region" tf:"region,omitempty"`
 
-// This cluster's location.
-// +kubebuilder:validation:Required
-Region *string `json:"region" tf:"region,omitempty"`
-
-// An array of tags applied to this object. Tags are for organizational purposes only.
-// +kubebuilder:validation:Optional
-Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
+	// An array of tags applied to this object. Tags are for organizational purposes only.
+	// +kubebuilder:validation:Optional
+	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
-
 
 type ControlPlaneObservation struct {
-
 }
-
 
 type ControlPlaneParameters struct {
 
-
-// Defines whether High Availability is enabled for the Control Plane Components of the cluster.
-// +kubebuilder:validation:Optional
-HighAvailability *bool `json:"highAvailability,omitempty" tf:"high_availability,omitempty"`
+	// Defines whether High Availability is enabled for the Control Plane Components of the cluster.
+	// +kubebuilder:validation:Optional
+	HighAvailability *bool `json:"highAvailability,omitempty" tf:"high_availability,omitempty"`
 }
-
 
 type NodesObservation struct {
+	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	InstanceID *int64 `json:"instanceId,omitempty" tf:"instance_id,omitempty"`
 
-ID *string `json:"id,omitempty" tf:"id,omitempty"`
-
-InstanceID *int64 `json:"instanceId,omitempty" tf:"instance_id,omitempty"`
-
-Status *string `json:"status,omitempty" tf:"status,omitempty"`
+	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 }
-
 
 type NodesParameters struct {
-
 }
-
 
 type PoolObservation struct {
+	ID *int64 `json:"id,omitempty" tf:"id,omitempty"`
 
-
-ID *int64 `json:"id,omitempty" tf:"id,omitempty"`
-
-Nodes []NodesObservation `json:"nodes,omitempty" tf:"nodes,omitempty"`
+	Nodes []NodesObservation `json:"nodes,omitempty" tf:"nodes,omitempty"`
 }
-
 
 type PoolParameters struct {
 
+	// When specified, the number of nodes autoscales within the defined minimum and maximum values.
+	// +kubebuilder:validation:Optional
+	Autoscaler []AutoscalerParameters `json:"autoscaler,omitempty" tf:"autoscaler,omitempty"`
 
-// When specified, the number of nodes autoscales within the defined minimum and maximum values.
-// +kubebuilder:validation:Optional
-Autoscaler []AutoscalerParameters `json:"autoscaler,omitempty" tf:"autoscaler,omitempty"`
+	// The number of nodes in the Node Pool.
+	// +kubebuilder:validation:Required
+	Count *int64 `json:"count" tf:"count,omitempty"`
 
-// The number of nodes in the Node Pool.
-// +kubebuilder:validation:Required
-Count *int64 `json:"count" tf:"count,omitempty"`
-
-// A Linode Type for all of the nodes in the Node Pool.
-// +kubebuilder:validation:Required
-Type *string `json:"type" tf:"type,omitempty"`
+	// A Linode Type for all of the nodes in the Node Pool.
+	// +kubebuilder:validation:Required
+	Type *string `json:"type" tf:"type,omitempty"`
 }
 
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {
 	v1.ResourceSpec `json:",inline"`
-	ForProvider       ClusterParameters `json:"forProvider"`
+	ForProvider     ClusterParameters `json:"forProvider"`
 }
 
 // ClusterStatus defines the observed state of Cluster.
 type ClusterStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider          ClusterObservation `json:"atProvider,omitempty"`
+	AtProvider        ClusterObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

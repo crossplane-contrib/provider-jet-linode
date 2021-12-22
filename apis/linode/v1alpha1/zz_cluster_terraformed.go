@@ -23,7 +23,6 @@ import (
 
 	"github.com/crossplane-contrib/terrajet/pkg/resource"
 	"github.com/crossplane-contrib/terrajet/pkg/resource/json"
-	
 )
 
 // GetTerraformResourceType returns Terraform resource type for this Cluster
@@ -33,7 +32,7 @@ func (mg *Cluster) GetTerraformResourceType() string {
 
 // GetConnectionDetailsMapping for this Cluster
 func (tr *Cluster) GetConnectionDetailsMapping() map[string]string {
-  return map[string]string{ "kubeconfig": "status.atProvider.kubeconfig",  }
+	return map[string]string{"kubeconfig": "status.atProvider.kubeconfig"}
 }
 
 // GetObservation of this Cluster
@@ -82,7 +81,6 @@ func (tr *Cluster) LateInitialize(attrs []byte) (bool, error) {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
 	opts := []resource.GenericLateInitializerOption{resource.WithZeroValueJSONOmitEmptyFilter(resource.CNameWildcard)}
-	
 
 	li := resource.NewGenericLateInitializer(opts...)
 	return li.LateInitialize(&tr.Spec.ForProvider, params)
@@ -90,5 +88,5 @@ func (tr *Cluster) LateInitialize(attrs []byte) (bool, error) {
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
 func (tr *Cluster) GetTerraformSchemaVersion() int {
-    return 0
+	return 0
 }
